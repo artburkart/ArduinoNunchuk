@@ -16,3 +16,7 @@ Note: This project is no longer maintained, but it is functional.
 ## Installation
 
 Copy the 'ArduinoNunchuk' folder, located in the same folder as this 'README' file, to the Arduino libraries folder (Arduino/libraries).
+
+## Modification
+I've changed initialization sequence and method of communication with nunchuck. Idea of changes is taken at http://forum.arduino.cc/index.php?topic=45924.0. 
+All credits are to crimony.

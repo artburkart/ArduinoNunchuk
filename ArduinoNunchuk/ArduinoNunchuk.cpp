@@ -20,12 +20,22 @@
 
 void ArduinoNunchuk::init()
 {
-  Wire.begin();
 
-  ArduinoNunchuk::_sendByte(0x55, 0xF0);
-  ArduinoNunchuk::_sendByte(0x00, 0xFB);
 
-  ArduinoNunchuk::update();
+#define pwrpin PORTC3
+#define gndpin PORTC2
+  DDRC |= _BV(pwrpin) | _BV(gndpin);
+  PORTC &= ~ _BV(gndpin);
+  PORTC |=  _BV(pwrpin);
+  delay(100);  // wait for things to stabilize
+
+Wire.begin();
+delay(1);
+
+Wire.beginTransmission(0x52);      // device address
+Wire.write(0xF0);                    // 1st initialisation register
+Wire.write(0x55);                    // 1st initialisation value
+Wire.endTransmission();
 }
 
 void ArduinoNunchuk::update()
@@ -48,18 +58,12 @@ void ArduinoNunchuk::update()
   ArduinoNunchuk::accelZ = (values[4] << 2) | ((values[5] >> 6) & 3);
   ArduinoNunchuk::zButton = !((values[5] >> 0) & 1);
   ArduinoNunchuk::cButton = !((values[5] >> 1) & 1);
-
-  ArduinoNunchuk::_sendByte(0x00, 0x00);
+  ArduinoNunchuk::_sendByte(0x00);
 }
 
-void ArduinoNunchuk::_sendByte(byte data, byte location)
+void ArduinoNunchuk::_sendByte(byte data)
 {
   Wire.beginTransmission(ADDRESS);
-
-  Wire.write(location);
   Wire.write(data);
-
   Wire.endTransmission();
-
-  delay(10);
 }

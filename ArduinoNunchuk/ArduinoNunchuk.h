@@ -32,7 +32,7 @@ class ArduinoNunchuk
     void update();
 
   private:
-    void _sendByte(byte data, byte location);
+    void _sendByte(byte data);
 };
 
 #endif
